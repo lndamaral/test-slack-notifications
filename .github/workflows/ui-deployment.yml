@@ -9,8 +9,5 @@ jobs:
     name: Fail Job
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Fail the job
         run: exit 0
