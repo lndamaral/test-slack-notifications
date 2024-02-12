@@ -9,8 +9,8 @@ jobs:
     name: Fail Job
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Fail the job
         run: exit 0
