@@ -9,10 +9,10 @@ jobs:
     name: UI 🚀
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Run UI Deployment Workflow
         id: ui_workflow
-        uses: ./ui-deployment.yml
+        uses: ./.github/actions/ui-deployment.yml
 
       - name: Store UI Job Status
         if: always()
@@ -61,7 +61,7 @@ jobs:
             \"attachments\": [
               {
                 \"color\": \"${{ steps.set-color.outputs.color }}\",
-                \"pretext\": \"*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} - $tag_used>\",
+                \"pretext\": \"*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|$tag_used>\",
                 \"text\": \"*Date:* ${{ steps.get-date.outputs.date }} UTC\n*Status:* $status ${{ steps.set-emoji.outputs.emoji }}\"
               }
             ]
