@@ -52,15 +52,12 @@ jobs:
       - name: Send Slack notification
         run: |
           status=$(cat ./ui_job_status/ui_job_status.txt)
-          curl -X POST -H 'Content-type: application/json' --data '{
-            "attachments": [
+          curl -X POST -H 'Content-type: application/json' --data "{
+            \"attachments\": [
               {
-                "color": "${{ steps.set-color.outputs.color }}",
-                "pretext": "*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} - ${{ github.job }}>",
-                "text": "*Date:* ${{ steps.get-date.outputs.date }}\n*Status:* $status ${{ steps.set-emoji.outputs.emoji }}"
+                \"color\": \"${{ steps.set-color.outputs.color }}\",
+                \"pretext\": \"*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} - ${{ github.job }}>\",
+                \"text\": \"*Date:* ${{ steps.get-date.outputs.date }}\n*Status:* $status ${{ steps.set-emoji.outputs.emoji }}\"
               }
             ]
-          }' ${{ secrets.SLACK_WEBHOOK_DEBUG }}
-    
-
-          
+          }" ${{ secrets.SLACK_WEBHOOK }}
