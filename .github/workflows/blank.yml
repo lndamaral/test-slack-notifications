@@ -9,6 +9,9 @@ jobs:
     name: UI 🚀
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
       - name: Run UI Deployment Workflow
         id: ui_workflow
         uses: ./.github/workflows/ui-deployment.yml
