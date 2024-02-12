@@ -14,8 +14,18 @@ jobs:
         id: job-status
         run: echo "::set-output name=status::${{ job.status }}"
       
+      - name: Set color based on job status
+        id: set-color
+        run: echo "::set-output name=color::$(if [ '${{ job.status }}' == 'success' ]; then echo 'good'; else echo 'danger'; fi)"
+      
       - name: Send Slack notification
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "*Job Name:* ${{ github.workflow }} - ${{ github.job }}\n*Date:* $(date)\n*Status:* ${{ steps.job-status.outputs.status }}"
+            "attachments": [
+              {
+                "color": "${{ steps.set-color.outputs.color }}",
+                "pretext": "*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} - ${{ github.job }}>",
+                "text": "*Date:* $date\n*Status:* ${{ steps.job-status.outputs.status }}"
+              }
+            ]
           }' ${{ secrets.SLACK_WEBHOOK_DEBUG }}
