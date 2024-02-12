@@ -12,7 +12,6 @@ jobs:
       - name: Run UI Deployment Workflow
         id: ui_workflow
         uses: ./.github/workflows/ui-deployment.yml
-        continue-on-error: true
 
       - name: Store UI Job Status
         if: always()
