@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Run UI Deployment Workflow
         id: ui_workflow
-        uses: ui-deployment.yml
+        uses: ./ui-deployment.yml
 
       - name: Store UI Job Status
         if: always()
