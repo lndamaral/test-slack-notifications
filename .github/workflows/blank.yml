@@ -13,13 +13,9 @@ jobs:
       - name: Set job status
         id: job-status
         run: echo "::set-output name=status::${{ job.status }}"
-  
+      
       - name: Send Slack notification
-        uses: slack/webhook-action@v2
-        with:
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_DEBUG }}
-          text: |
-            *Job Name:* ${{ github.workflow }} - ${{ github.job }}
-            *Date:* $(date)
-            *Status:* ${{ steps.job-status.outputs.status }}
-          channel: '#test-prod-releases'
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "text": "*Job Name:* ${{ github.workflow }} - ${{ github.job }}\n*Date:* $(date)\n*Status:* ${{ steps.job-status.outputs.status }}"
+          }' ${{ secrets.SLACK_WEBHOOK_DEBUG }}
