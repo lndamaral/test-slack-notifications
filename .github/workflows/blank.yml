@@ -1,0 +1,35 @@
+name: UAT
+on:
+  push:
+    tags:
+      - 'uat-*'
+jobs:
+  ui:
+    name: UI 🚀
+    uses: ./.github/workflows/ui-deployment.yml
+    secrets:
+      VERCEL_PROJECT_ID: ${{ secrets.UAT_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  
+  notify_slack:
+    name: Notify Slack
+    needs: [ui]
+    runs-on: ubuntu-latest
+    if: always() 
+    steps:
+      - name: Set job status
+        id: job-status
+        run: echo "::set-output name=status::${{ job.status }}"
+  
+      - name: Send Slack notification
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          status: ${{ steps.job-status.outputs.status }}
+          channel: '#aaa-uat-releases'
+          text: |
+            *Job Name:* ${{ github.workflow }} - ${{ github.job }}
+            *Date:* $(date)
+            *Status:* ${{ steps.job-status.outputs.status }}
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
