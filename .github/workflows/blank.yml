@@ -9,12 +9,9 @@ jobs:
     name: UI 🚀
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        
       - name: Run UI Deployment Workflow
         id: ui_workflow
-        uses: ./.github/workflows/ui-deployment.yml
+        uses: ./ui-deployment.yml
 
       - name: Store UI Job Status
         if: always()
@@ -58,11 +55,12 @@ jobs:
       - name: Send Slack notification
         run: |
           status=$(cat ./ui_job_status/ui_job_status.txt)
+          job_name=$(echo "${GITHUB_WORKFLOW}-${GITHUB_JOB}")
           curl -X POST -H 'Content-type: application/json' --data "{
             \"attachments\": [
               {
                 \"color\": \"${{ steps.set-color.outputs.color }}\",
-                \"pretext\": \"*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} - ${{ github.job }}>\",
+                \"pretext\": \"*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} - $job_name>\",
                 \"text\": \"*Date:* ${{ steps.get-date.outputs.date }} UTC\n*Status:* $status ${{ steps.set-emoji.outputs.emoji }}\"
               }
             ]
