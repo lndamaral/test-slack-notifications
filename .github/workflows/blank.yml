@@ -13,7 +13,7 @@ jobs:
       status: ${{ job.status }}
     steps:
       - name: Fail the job
-        run: exit 1
+        run: exit 0
 
   notify_slack:
     name: Notify Slack
