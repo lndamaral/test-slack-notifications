@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - 'uat-*'
+
 jobs:
   notify_slack:
     name: Notify Slack
@@ -14,13 +15,11 @@ jobs:
         run: echo "::set-output name=status::${{ job.status }}"
   
       - name: Send Slack notification
-        uses: rtCamp/action-slack-notify@v2
+        uses: slack/webhook-action@v2
         with:
-          status: ${{ steps.job-status.outputs.status }}
-          channel: '#test-prod-releases'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_DEBUG }}
           text: |
             *Job Name:* ${{ github.workflow }} - ${{ github.job }}
             *Date:* $(date)
             *Status:* ${{ steps.job-status.outputs.status }}
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          channel: '#test-prod-releases'
