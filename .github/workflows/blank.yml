@@ -24,7 +24,7 @@ jobs:
 
       - name: Set emoji based on job status
         id: set-emoji
-        run: echo "::set-output name=emoji::$(if [ '${{ job.status }}' == 'success' ]; then echo '::60fps_parrot:'; else echo ':alert:'; fi)"
+        run: echo "::set-output name=emoji::$(if [ '${{ job.status }}' == 'success-fail' ]; then echo ':60fps_parrot:'; else echo ':alert:'; fi)"
 
       - name: Send Slack notification
         run: |
