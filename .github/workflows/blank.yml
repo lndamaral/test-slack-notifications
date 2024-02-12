@@ -5,29 +5,41 @@ on:
       - 'uat-*'
 
 jobs:
-
-  fail_job:
-    name: Fail Job
+  ui:
+    name: UI 🚀
     runs-on: ubuntu-latest
-    outputs:
-      status: ${{ job.status }}
     steps:
-      - name: Fail the job
-        run: exit 0
+      - name: Run UI Deployment Workflow
+        id: ui_workflow
+        uses: ./.github/workflows/ui-deployment.yml
+        continue-on-error: true
+
+      - name: Store UI Job Status
+        if: always()
+        run: echo "${{ job.status }}" > ui_job_status.txt
+
+      - name: Upload UI Job Status Artifact
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: ui-job-status
+          path: ui_job_status.txt
 
   notify_slack:
     name: Notify Slack
     runs-on: ubuntu-latest
-    needs: fail_job
-    if: always() 
+    needs: ui
+    if: always()
     steps:
-      - name: Set job status
-        id: job-status
-        run: echo "::set-output name=status::${{ needs.fail_job.outputs.status }}"
+      - name: Download UI Job Status Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ui-job-status
+          path: ./ui_job_status
       
       - name: Set color based on job status
         id: set-color
-        run: echo "::set-output name=color::$(if [ '${{ needs.fail_job.outputs.status }}' == 'success' ]; then echo 'good'; else echo 'danger'; fi)"
+        run: echo "::set-output name=color::$(if [ '$(cat ./ui_job_status/ui_job_status.txt)' == 'success' ]; then echo 'good'; else echo 'danger'; fi)"
       
       - name: Get current date
         id: get-date
@@ -35,7 +47,7 @@ jobs:
 
       - name: Set emoji based on job status
         id: set-emoji
-        run: echo "::set-output name=emoji::$(if [ '${{ needs.fail_job.outputs.status }}' == 'success' ]; then echo ':parrot:'; else echo ':alert:'; fi)"
+        run: echo "::set-output name=emoji::$(if [ '$(cat ./ui_job_status/ui_job_status.txt)' == 'success' ]; then echo ':60fps_parrot:'; else echo ':alert:'; fi)"
 
       - name: Send Slack notification
         run: |
@@ -44,7 +56,8 @@ jobs:
               {
                 "color": "${{ steps.set-color.outputs.color }}",
                 "pretext": "*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} - ${{ github.job }}>",
-                "text": "*Date:* ${{ steps.get-date.outputs.date }}\n*Status:* ${{ steps.job-status.outputs.status }} ${{ steps.set-emoji.outputs.emoji }}"
+                "text": "*Date:* ${{ steps.get-date.outputs.date }} UTC\n*Status:* $(cat ./ui_job_status/ui_job_status.txt) ${{ steps.set-emoji.outputs.emoji }}"
               }
             ]
           }' ${{ secrets.SLACK_WEBHOOK_DEBUG }}
+    
