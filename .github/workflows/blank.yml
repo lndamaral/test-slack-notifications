@@ -4,17 +4,9 @@ on:
     tags:
       - 'uat-*'
 jobs:
-  ui:
-    name: UI 🚀
-    uses: ./.github/workflows/ui-deployment.yml
-    secrets:
-      VERCEL_PROJECT_ID: ${{ secrets.UAT_PROJECT_ID }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   
   notify_slack:
     name: Notify Slack
-    needs: [ui]
     runs-on: ubuntu-latest
     if: always() 
     steps:
