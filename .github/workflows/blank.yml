@@ -5,9 +5,18 @@ on:
       - 'uat-*'
 
 jobs:
+
+  fail_job:
+    name: Fail Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail the job
+        run: exit 1
+
   notify_slack:
     name: Notify Slack
     runs-on: ubuntu-latest
+    needs: fail_job
     if: always() 
     steps:
       - name: Set job status
@@ -24,7 +33,7 @@ jobs:
 
       - name: Set emoji based on job status
         id: set-emoji
-        run: echo "::set-output name=emoji::$(if [ '${{ job.status }}' == 'success-fail' ]; then echo ':60fps_parrot:'; else echo ':alert:'; fi)"
+        run: echo "::set-output name=emoji::$(if [ '${{ job.status }}' == 'success' ]; then echo ':60fps_parrot:'; else echo ':alert:'; fi)"
 
       - name: Send Slack notification
         run: |
@@ -33,7 +42,7 @@ jobs:
               {
                 "color": "${{ steps.set-color.outputs.color }}",
                 "pretext": "*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} - ${{ github.job }}>",
-                "text": "*Date:* ${{ steps.get-date.outputs.date }}\n*Status:* ${{ steps.job-status.outputs.status }} ${{ steps.set-emoji.outputs.emoji }}"
+                "text": "*Date:* ${{ steps.get-date.outputs.date }} UTC\n*Status:* ${{ steps.job-status.outputs.status }} ${{ steps.set-emoji.outputs.emoji }}"
               }
             ]
           }' ${{ secrets.SLACK_WEBHOOK_DEBUG }}
