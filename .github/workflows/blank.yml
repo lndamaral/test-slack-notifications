@@ -60,4 +60,4 @@ jobs:
                 \"text\": \"*Date:* ${{ steps.get-date.outputs.date }}\n*Status:* $status ${{ steps.set-emoji.outputs.emoji }}\"
               }
             ]
-          }" ${{ secrets.SLACK_WEBHOOK }}
+          }" ${{ secrets.SLACK_WEBHOOK_DEBUG }}
