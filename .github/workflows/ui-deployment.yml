@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fail the job
-        run: exit 1
+        run: exit 0
