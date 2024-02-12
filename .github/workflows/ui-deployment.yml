@@ -1,8 +1,8 @@
-name: UAT
+name: UI deployment
 on:
   push:
     tags:
-      - 'uat-*'
+      - 'dwdw-*'
 
 jobs:
   fail_job:

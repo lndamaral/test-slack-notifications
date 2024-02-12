@@ -60,7 +60,7 @@ jobs:
               {
                 \"color\": \"${{ steps.set-color.outputs.color }}\",
                 \"pretext\": \"*Job Name:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} - ${{ github.job }}>\",
-                \"text\": \"*Date:* ${{ steps.get-date.outputs.date }}\n*Status:* $status ${{ steps.set-emoji.outputs.emoji }}\"
+                \"text\": \"*Date:* ${{ steps.get-date.outputs.date }} UTC\n*Status:* $status ${{ steps.set-emoji.outputs.emoji }}\"
               }
             ]
           }" ${{ secrets.SLACK_WEBHOOK_DEBUG }}
