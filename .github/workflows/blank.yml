@@ -35,7 +35,11 @@ jobs:
         with:
           name: ui-job-status
           path: ./ui_job_status
-      
+        
+      - name: print status
+        id: print-status
+        run: echo $(cat ./ui_job_status/ui_job_status.txt)
+
       - name: Set color based on job status
         id: set-color
         run: echo "::set-output name=color::$(if [ '$(cat ./ui_job_status/ui_job_status.txt)' == 'success' ]; then echo 'good'; else echo 'danger'; fi)"
