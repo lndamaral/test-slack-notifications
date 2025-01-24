@@ -1,10 +1,10 @@
-name: 🤖 E2E Playwright Tests (UAT)
+name: 🤖 E2E Playwright Tests
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to'
+        description: 'Environment'
         required: true
         default: 'uat'
 
