@@ -20,13 +20,11 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npm run test:ui:uat
-      - name: List files for debugging
-        run: pwd; ls -l
+        run: npm run test:ui:uat; sleep 5
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report0
+          name: playwright-report
           path: playwright-report/
           retention-days: 30
