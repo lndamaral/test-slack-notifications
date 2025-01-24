@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test:ui:dev": "npx playwright test",
     "test:ui:uat": "npx playwright test"
   },
   "keywords": [],
