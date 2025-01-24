@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  E2E_Test_Execution:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     defaults:
@@ -28,5 +28,5 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
-          path: playwright-report/
+          path: ./src/apps/e2e/playwright-report/
           retention-days: 30
