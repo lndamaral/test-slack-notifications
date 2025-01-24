@@ -2,6 +2,11 @@ name: 🤖 E2E Playwright Tests (UAT)
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'uat'
 
 jobs:
   E2E_Test_Execution:
@@ -20,9 +25,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npm run test:ui:uat; sleep 5
-      - name: List files for debugging
-        run: pwd; ls -l ; cd ..; cd ..; cd ..; pwd; ls -l
+        run: npm run test:ui:${{ github.event.inputs.environment }}
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
